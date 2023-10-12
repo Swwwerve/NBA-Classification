@@ -5,6 +5,8 @@ import numpy as np
 import cv2
 import matplotlib 
 from matplotlib import pyplot as plt
+import os
+import shutil
 
 # Sample image 
 '''
@@ -56,9 +58,22 @@ def get_cropped_image_if_2_eyes(image_path):
         if len(eyes) >= 2:
             return roi_color
         
-cropped_image = get_cropped_image_if_2_eyes(r".\Model\dataset\giannis\RQTKSXPXDJBV7JY7HL3WOBZ6B4.jpg")
 # If you run plt.imshow() and it result in error, then your image does not have two eyes
-    
+
+# Create folder for all cropped images
+path_to_data = r".\Model\dataset"
+path_to_crop_data = r".\Model\dataset\cropped"
+
+img_dirs = []
+for entry in os.scandir(path_to_data): # Go through all subdirectories in dataset folder
+    if entry.is_dir():
+        img_dirs.append(entry.path)
+        
+# Creating cropped folder if it already doesn't exist
+if os.path.exists(path_to_crop_data): # Does the folder already exist?
+    shutil.rmtree(path_to_crop_data) # Remove it 
+os.mkdir(path_to_crop_data)
+
 # Step 2 - manual data cleaning 
 # Step 3 - Wavelet transformed images
 # Step 4 - Train model 
