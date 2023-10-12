@@ -10,6 +10,7 @@ import pywt
 
 # Step 3 - Wavelet transformed images
 # We can use wavelet transform for feature engineering --> similar to fourier transform
+# Stackoverflow 
 def w2d(img, mode='haar', level=1):
     imArray = img
     # Datatype conversions
@@ -33,4 +34,28 @@ def w2d(img, mode='haar', level=1):
     return imArray_H
 
 # Step 4 - Train model 
+class_dict = {}
+count = 0
+for celebrity_name in cropped_images.celebrity_file_names_dict.keys():
+    class_dict[celebrity_name] = count
+    count += 1
+
+# Get training and test sets
+X = [] # All the images
+Y = [] # A number representing which NBA player it is (class_dict above)
+for celebrity_name, training_files in cropped_images.celebrity_file_names_dict.items(): # Iterate through every person
+    for training_image in training_files: # Iterate through every image for every person
+        img = cv2.imread(training_image)
+        if img is None: # Since we manually removed images the result of cv2.imread() will be None for some of them
+            continue
+        scaled_raw_img = cv2.resize(img, (32,32)) # Scaled raw image
+        img_har = w2d(img, 'db1', 5)
+        scaled_har_img = cv2.resize(img_har, (32,32))
+        combined_img = np.vstack((scaled_raw_img.reshape(32*32*3,1),scaled_har_img.reshape(32*32,1))) # 32*32*3 the 3 is for rgb
+        X.append(combined_img)
+        Y.append(class_dict[celebrity_name])
+        
+X = np.array(X).reshape(len(X),4096).astype(float)
+print(X.shape)
+
 # Step 5 - Save model 

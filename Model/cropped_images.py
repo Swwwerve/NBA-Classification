@@ -104,5 +104,34 @@ for img_dir in img_dirs:
             cv2.imwrite(cropped_file_path, roi_color) # Saving roi_color in cropped_file_path
             celebrity_file_names_dict[celebrity_name].append(cropped_file_path)
             count += 1
+            
+# Manually examine cropped folder and delete any unwanted images
+celebrity_file_names_dict = {}
+for img_dir in cropped_image_dirs:
+    celebrity_name = img_dir.split('\\')[-1]
+    file_list = []
+    for entry in os.scandir(img_dir):
+        file_list.append(entry.path)
+    celebrity_file_names_dict[celebrity_name] = file_list
 
 # Step 2 - manual data cleaning 
+for celeb_name, image_list in celebrity_file_names_dict.items():
+    for image in image_list:
+        image_split = image.split('\\')[-1]
+        if celeb_name == 'giannis':
+            if image_split == 'giannis18.png' or image_split == 'giannis20.png' or image_split == 'giannis25.png' or image_split == 'giannis33.png' or image_split == 'giannis34.png' or image_split == 'giannis37.png':
+                image_list.remove(image)
+        elif celeb_name == 'kevin':
+            if image_split == 'kevin11.png' or image_split == 'kevin26.png' or image_split == 'kevin35.png':
+                image_list.remove(image)
+        elif celeb_name == 'lebron':
+            if image_split == 'lebron13.png' or image_split == 'lebron17.png' or image_split == 'lebron24.png' or image_split == 'lebron26.png':
+                image_list.remove(image)
+        elif celeb_name == 'russell':
+            if image_split == 'russell5.png' or image_split == 'russell9.png' or image_split == 'russell24.png' or image_split == 'russell28.png':
+                image_list.remove(image)
+        else:
+            if image_split == 'stephen2.png' or image_split == 'stephen12.png' or image_split == 'stephen21.png':
+                image_list.remove(image)
+        
+        celebrity_file_names_dict[celeb_name] = image_list
