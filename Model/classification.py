@@ -4,6 +4,7 @@
 import numpy as np
 import cv2
 import matplotlib 
+matplotlib.use('TkAgg',force=True)
 from matplotlib import pyplot as plt
 import os
 import shutil
@@ -56,7 +57,7 @@ def get_cropped_image_if_2_eyes(image_path):
         roi_color = img[y:y+h, x:x+w]
         eyes = eye_cascade.detectMultiScale(roi_gray)
         if len(eyes) >= 2:
-            return roi_color
+            return roi_color # Doesn't account for 2 faces 
         
 # If you run plt.imshow() and it result in error, then your image does not have two eyes
 
@@ -67,12 +68,41 @@ path_to_crop_data = r".\Model\dataset\cropped"
 img_dirs = []
 for entry in os.scandir(path_to_data): # Go through all subdirectories in dataset folder
     if entry.is_dir():
-        img_dirs.append(entry.path)
+        img_dirs.append(entry.path) # all the subdirectories per player
+        
+img_dirs = img_dirs[1:] # Delete cropped folder
         
 # Creating cropped folder if it already doesn't exist
 if os.path.exists(path_to_crop_data): # Does the folder already exist?
     shutil.rmtree(path_to_crop_data) # Remove it 
 os.mkdir(path_to_crop_data)
+
+# Iterating through images
+cropped_image_dirs = [] # Cropped folder path for all 5 players
+celebrity_file_names_dict = {} 
+
+for img_dir in img_dirs:
+    count = 1
+    celebrity_name = img_dir.split('\\')[-1] # Splits directory and celeb_name into two components
+    print(celebrity_name)
+    
+    celebrity_file_names_dict[celebrity_name] = [] # blank array for all image paths in dict
+    
+    for entry in os.scandir(img_dir): # Go through images in a single player's subdirectory
+        roi_color = get_cropped_image_if_2_eyes(entry.path) # roi_color is None if no eyes detected
+        if roi_color is not None:
+            cropped_folder = path_to_crop_data + "\\" + celebrity_name # Subdirectory within cropped folder per player
+            if not os.path.exists(cropped_folder):
+                os.makedirs(cropped_folder)
+                cropped_image_dirs.append(cropped_folder) # Helper variable
+                print("Generating cropped images in folder: ", cropped_folder)
+                
+            cropped_file_name = celebrity_name + str(count) + ".png" # e.g. giannis1.png, giannis2.png
+            cropped_file_path = cropped_folder + "\\" + cropped_file_name 
+            
+            cv2.imwrite(cropped_file_path, roi_color) # Saving roi_color in cropped_file_path
+            celebrity_file_names_dict[celebrity_name].append(cropped_file_path)
+            count += 1
 
 # Step 2 - manual data cleaning 
 # Step 3 - Wavelet transformed images
