@@ -56,6 +56,17 @@ for celebrity_name, training_files in cropped_images.celebrity_file_names_dict.i
         Y.append(class_dict[celebrity_name])
         
 X = np.array(X).reshape(len(X),4096).astype(float)
-print(X.shape)
+
+# Training model
+from sklearn.svm import SVC
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.metrics import classification_report
+
+X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
+
+pipe = Pipeline([('scaler', StandardScaler()), ('svc', SVC(kernel='rbf',C=10))]) # Scaling X_train using standardscaler and creating SVM model in 2nd step
+pipe.fit(X_train, y_train)
 
 # Step 5 - Save model 
