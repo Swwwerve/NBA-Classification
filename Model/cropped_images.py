@@ -4,11 +4,12 @@
 import numpy as np
 import cv2
 import matplotlib 
-matplotlib.use('TkAgg',force=True)
+matplotlib.use('TkAgg',force=True) # Stackoverflow
 from matplotlib import pyplot as plt
 import os
 import shutil
 import pywt
+import json
 
 # Sample image 
 '''
@@ -135,3 +136,7 @@ for celeb_name, image_list in celebrity_file_names_dict.items():
                 image_list.remove(image)
         
         celebrity_file_names_dict[celeb_name] = image_list
+        
+# Put dictionary into new file 
+with open("celeb_file_names.json", "w") as file:
+    json.dump(celebrity_file_names_dict, file)
