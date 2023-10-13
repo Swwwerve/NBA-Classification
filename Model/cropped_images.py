@@ -8,7 +8,6 @@ matplotlib.use('TkAgg',force=True) # Stackoverflow
 from matplotlib import pyplot as plt
 import os
 import shutil
-import pywt
 import json
 
 # Sample image 
