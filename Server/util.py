@@ -25,7 +25,11 @@ def classify_image(image_base64_data, file_path=None):
         
         final = combined_img.reshape(1, len_image_array).astype(float) # Conversion to float for APIs
         
-        result.append(__model.predict(final)[0])
+        result.append({
+            'class': class_number_to_name(__model.predict(final)[0]),
+            'class_probability': np.round(__model.predict_proba(final) * 100,2).tolist()[0], # Probability that the face is other players 
+            'class_dictionary': __class_name_to_number # So UI knows how to map # to player
+        })
         
     return result
         
@@ -43,6 +47,9 @@ def load_saved_artifacts(): # Codebasics
         with open(r".\Server\artifacts\saved_model.pkl", 'rb') as f:
             __model = joblib.load(f)
             print("Loading saved artifacts...")
+            
+def class_number_to_name(class_num):
+    return __class_number_to_name[class_num]
 
 def get_cv2_image_from_base64_string(b64str): # Stack overflow
     '''
@@ -83,3 +90,4 @@ def get_b64_image():
 if __name__ == "__main__":
     load_saved_artifacts() # Loads model and class_dictionary
     print(classify_image(get_b64_image(), None)) # Returns number on dictionary that corresponds to player
+    
