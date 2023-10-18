@@ -1,4 +1,5 @@
 PyWavelets
 opencv-python==4.8.1.78
 seaborn==0.8.1
-werkzeug==2.2.2
+Flask==2.3.0
+Werkzeug==2.3.0
