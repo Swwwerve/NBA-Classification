@@ -19,4 +19,4 @@ def classify_image(): # This function will do image classifying using saved mode
 if __name__ == "__main__":
     print("Starting Python Flask Server for NBA Athlete Image Classification")
     util.load_saved_artifacts()
-    app.run(port=8000) # Running server on port 5500
+    app.run(port=5500) # Running server on port 5500
