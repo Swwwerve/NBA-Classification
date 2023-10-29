@@ -4,5 +4,17 @@ This is a project using machine learning (GridSearchCV to find optimal model) to
 # Packages
 pip install -r requirements.txt
 
-# Flask Server
+# IMPORTANT NOTE
 Flask server is still in development 
+
+## Process
+1. Dataset
+
+
+3. Model
+4. Server
+5. UI
+6. Flask Server**
+
+# Reference
+https://www.youtube.com/@codebasics
