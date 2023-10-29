@@ -1,7 +1,7 @@
 Dropzone.autoDiscover = false;
 
 function init() {
-    let dz = new Dropzone("#dropzone", { // Initializing dropzone control
+    let dz = new Dropzone("#dropzone", {
         url: "/",
         maxFiles: 1,
         addRemoveLinks: true,
@@ -9,20 +9,19 @@ function init() {
         autoProcessQueue: false
     });
     
-    dz.on("addedfile", function() { // Called when you drag and drop file 
+    dz.on("addedfile", function() {
         if (dz.files[1]!=null) {
             dz.removeFile(dz.files[0]);        
         }
     });
 
     dz.on("complete", function (file) {
-        // Dataurl is the base64 representation of the image
-        let imageData = file.dataURL; // Classify button click triggers this function 
+        let imageData = file.dataURL;
         
-        let url = "http://127.0.0.1:5500/classify_image/";
+        let url = "http://127.0.0.1:5500/classify_image";
 
         $.post(url, {
-            image_data: file.dataURL
+            image_data: imageData
         },function(data, status) {
             console.log(data);
             if (!data || data.length==0) {
@@ -31,7 +30,6 @@ function init() {
                 $("#error").show();
                 return;
             }
-            let players = ["giannis_antetokounmpo", "kevin_durant", "lebron_james", "russell_westbrook", "stephen_curry"];
             
             let match = null;
             let bestScore = -1;
@@ -59,12 +57,12 @@ function init() {
         });
     });
 
-    $("#submitBtn").on('click', function (e) { // Submit file to be processed
+    $("#submitBtn").on('click', function (e) {
         dz.processQueue();		
     });
 }
 
-$(document).ready(function() { // Called when html is rendered in browser
+$(function() {
     console.log( "ready!" );
     $("#error").hide();
     $("#resultHolder").hide();
